@@ -17,10 +17,15 @@ const edgeHandler = (req: NextRequest) => {
 
 // Main middleware function
 export default async function middleware(req: NextRequest, ev: any) {
+  if (process.env.VERCEL_EDGE) {
+    return edgeHandler(req);
+  } else {
   return authMiddleware({
     publicRoutes: ["/", "/courses", "/course-preview/(.*)"],
   })(req, ev);
 }
+}  
+  
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
